@@ -1,4 +1,7 @@
 ```
+sh run_train_scorer.sh
+```
+```
 python3 denoise_create_mask.py yelp data_directory/ 1 
 ```
 ```
