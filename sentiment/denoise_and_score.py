@@ -51,14 +51,21 @@ for i in range(0, len(op), batch_size):
     translated = model.generate(**batch,max_length=512,num_beams=5, num_return_sequences=n_seq, temperature=1.5)
     tgt_text = tokenizer.batch_decode(translated, skip_special_tokens=True)
     disc_ip = []
+    disc_tgt = []
     for j in range(batch_size):
         assert i+j not in final.keys()
-        disc_ip.append(ip[i+j]+" </s> "+tgt_text[j])
+        disc_ip.append(ip[i+j])
+        disc_tgt.append(tgt_text[j])
 
     encoded_input = disc_tokenizer(disc_ip, padding=True, truncation=True, max_length = 512, return_tensors='pt')
     output = disc_model(**encoded_input.to('cuda'))
     t = output['logits'].tolist()
     flat_list = [item for sublist in t for item in sublist]
+
+    encoded_tgt = disc_tokenizer(disc_tgt, padding=True, truncation=True, max_length = 512, return_tensors='pt')
+    tgt_output = disc_model(**encoded_tgt.to('cuda'))
+    t = tgt_output['logits'].tolist()
+    flat_list_tgt = [item for sublist in t for item in sublist]
 
     for j in range(batch_size):
         assert i+j not in final.keys()
@@ -66,7 +73,8 @@ for i in range(0, len(op), batch_size):
         final[i+j]['ip'] = ip[i+j]
         final[i+j]['masked'] = op[i+j]
         final[i+j]['op'] = tgt_text[j]
-        final[i+j]['disc-score'] = flat_list[j]
+        final[i+j]['ip-score'] = flat_list[j]
+        final[i+j]['op-score'] = flat_list_tgt[j]
 
     if len(final.keys()) % 15000 == 0:
         print(len(final.keys()))
