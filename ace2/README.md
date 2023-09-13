@@ -13,7 +13,9 @@ sh run_train_scorer.sh
 python3 mlm_mutation.py
 ```
 4. The next step is to score the output mutants generated in Step 3 using the trained scorer from Step 2 in order to create the training data for the generator. TODO: Discriminator -> Generator data using the scorer
+
 5. Finally we train the generator on the created paired data. This again is largely a small variation in the Huggingface [example](https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/run_translation.py) script with the changes mainly around data loading. We finetune [prot\_T5\_XL](https://huggingface.co/Rostlab/prot_t5_xxl_uniref50) for the task.  
 ```
 sh run_train_parallel.sh
 ```
+Data for training the generator follows the tranlsation JSON format for HuggingFace. We make our train set of 900k sequences available [here](https://drive.google.com/file/d/1ncnlRtrRkxfTB1L5Zs13hEsQxH-2bDqo/view?usp=drive_link) as a tarball.  

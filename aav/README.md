@@ -19,3 +19,4 @@ Train the generator model
 sh run_train_generator.sh
 ```
 
+Data for training the generator follows the tranlsation JSON format for HuggingFace. We make our train set of 900k sequences available [here](https://drive.google.com/file/d/1FOXwjloxwHf7rkMn5n_WzP6E3TUjN1_k/view?usp=drive_link) as a tarball.  
