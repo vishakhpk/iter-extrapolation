@@ -9,16 +9,14 @@ python3 train_all.py --split aav_6 --model cnn --gpu 0
 ```
 python3 score_sequences.py
 ```
-4. Create pairs of sequences with minimal change in AAV fitness score in order to train the generator model from the scored CNN data. 
+4. The data we use for training the generator (900k sequence pairs) following the tranlsation JSON format for HuggingFace is available [here](https://drive.google.com/file/d/1FOXwjloxwHf7rkMn5n_WzP6E3TUjN1_k/view?usp=drive_link) as a tarball. Create pairs of sequences with minimal change in AAV fitness score in order to train the generator model from the scored CNN data. 
 ```
 python3 create_pairs.py scored-train.json generator_data/
 ```
-The data we use for training the generator (900k sequence pairs) following the tranlsation JSON format for HuggingFace is available [here](https://drive.google.com/file/d/1FOXwjloxwHf7rkMn5n_WzP6E3TUjN1_k/view?usp=drive_link) as a tarball.  
-5. Train the generator model. This again is largely a small variation in the Huggingface example [script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/run_translation.py) with the changes mainly around data loading. We finetune [prot\_T5\_XXL](https://huggingface.co/Rostlab/prot_t5_xxl_uniref50) for the task. One operational detail is that we truncate the sequences (from the start) to a fixed position due to GPU memory constraints. The truncated part of the sequences is unchanged in any mutations (the mutable region is not touched during truncation). So we just have to handle this case during inference by prepending any output from our generator with the same truncated head string before the generations are scored.
+5. Train the generator model. This again is largely a small variation in the Huggingface example [script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/run_translation.py) with the changes mainly around data loading. We finetune [prot\_T5\_XXL](https://huggingface.co/Rostlab/prot_t5_xxl_uniref50) for the task. One operational detail is that we truncate the sequences (from the start) to a fixed position due to GPU memory constraints. The truncated part of the sequences is unchanged in any mutations (the mutable region is not touched during truncation). So we just have to handle this case during inference by prepending any output from our generator with the same truncated head string before the generations are scored. Model weights for a trained generator can be found [here](https://huggingface.co/vishakhpk/ice-aav-checkpoint-1).
 ```
 sh run_train_generator.sh
 ```
-Model weights for a trained generator can be found [here](https://huggingface.co/vishakhpk/ice-aav-checkpoint-1).
 6. We evaluate the output of the sequences using a CNN trained on the randomly sampled split of AAV. The script to train the CNN is found [here](https://github.com/J-SNACKKB/FLIP/tree/main/baselines) and can be run as follows: 
 ```
 python3 train_all.py --split aav_7 --model cnn --gpu 0 
