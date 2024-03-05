@@ -19,6 +19,3 @@ This repo is organized into three directories for each task, [sentiment control]
 }
 ```
 
-## TODOs
-1. Update model weights for each task
-2. Upload datasets used for training models 

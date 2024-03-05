@@ -9,7 +9,7 @@ python3 train_all.py --split aav_6 --model cnn --gpu 0
 ```
 python3 score_sequences.py
 ```
-4. The data we use for training the generator (900k sequence pairs) following the tranlsation JSON format for HuggingFace is available [here](https://drive.google.com/file/d/1FOXwjloxwHf7rkMn5n_WzP6E3TUjN1_k/view?usp=drive_link) as a tarball. Create pairs of sequences with minimal change in AAV fitness score in order to train the generator model from the scored CNN data. 
+4. The data we use for training the generator (900k sequence pairs) following the tranlsation JSON format for HuggingFace is available [here](https://drive.google.com/file/d/1FOXwjloxwHf7rkMn5n_WzP6E3TUjN1_k/view?usp=drive_link) as a tarball. To create this dataset, we select pairs of sequences with minimal change in AAV fitness score in order to train the generator model from the scored CNN data. 
 ```
 python3 create_pairs.py scored-train.json generator_data/
 ```
@@ -17,7 +17,7 @@ python3 create_pairs.py scored-train.json generator_data/
 ```
 sh run_train_generator.sh
 ```
-6. We evaluate the output of the sequences using a CNN trained on the randomly sampled split of AAV. The script to train the CNN is found [here](https://github.com/J-SNACKKB/FLIP/tree/main/baselines) and can be run as follows: 
+6. We evaluate the output of the sequences using a CNN trained on the randomly sampled split of AAV. This script has a lot of dependencies from the FLIP codebase and should be copied into the baselines/ directory of FLIP to execute it. The script to train the CNN is found [here](https://github.com/J-SNACKKB/FLIP/tree/main/baselines) and can be run as follows: 
 ```
 python3 train_all.py --split aav_7 --model cnn --gpu 0 
 ```
@@ -25,7 +25,7 @@ python3 train_all.py --split aav_7 --model cnn --gpu 0
 ```
 python3 eval_rewriter_distribution.py <model directory> <output model name> <output directory> <output filename>
 ```
-8. To run evaluation on the generated sequences, we include a utility script eval\_seqs\_cnn.py that consumes the output pickle file from the previous step and uses the trained CNN from step 6 to output fitness values. Here we show how to prepend the head string (that was truncated during data creation in step 5) to the generations and run inference. The scored output is saved as a pickle file. 
+8. To run evaluation on the generated sequences, we include a utility script eval\_seqs\_cnn.py that consumes the output pickle file from the previous step and uses the trained CNN from step 6 to output fitness values. Here we show how to prepend the head string (that was truncated during data creation in step 5) to the generations and run inference. The scored output is saved as a pickle file. This script also has dependencies from the FLIP codebase and should be copied into the home directory of FLIP to be executed.  
 ```
 python3 eval_seqs_cnn.py <saved pickle file from step 7> <output file name>
 ``` 
